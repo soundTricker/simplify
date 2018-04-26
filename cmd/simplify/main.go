@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/fogleman/simplify"
+	"github.com/soundTricker/simplify"
 )
 
 var factor float64
@@ -24,7 +24,10 @@ func main() {
 	fmt.Printf("Loading %s\n", args[0])
 	mesh, err := simplify.LoadBinarySTL(args[0])
 	if err != nil {
-		log.Fatal(err)
+		mesh, err = simplify.LoadSTL(args[0])
+		if err != nil {
+			log.Fatalf("failed loadin stl path: %s\n%v", args[0], err)
+		}
 	}
 	fmt.Printf("Input mesh contains %d faces\n", len(mesh.Triangles))
 	fmt.Printf("Simplifying to %d%% of original...\n", int(factor*100))

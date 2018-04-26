@@ -59,6 +59,10 @@ func Simplify(input *Mesh, factor float64) *Mesh {
 	numFaces := len(input.Triangles)
 	target := int(float64(numFaces) * factor)
 	for numFaces > target {
+
+		if queue.Len() == 0 {
+			break
+		}
 		// pop best pair
 		p := heap.Pop(&queue).(*Pair)
 

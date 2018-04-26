@@ -3,6 +3,7 @@ package simplify
 import (
 	"bufio"
 	"encoding/binary"
+	"fmt"
 	"os"
 	"strings"
 )
@@ -20,19 +21,19 @@ type STLTriangle struct {
 func LoadBinarySTL(path string) (*Mesh, error) {
 	file, err := os.Open(path)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Got os.Open error: %v", err)
 	}
 	defer file.Close()
 	header := STLHeader{}
 	if err := binary.Read(file, binary.LittleEndian, &header); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Got binary read error: %v", err)
 	}
 	count := int(header.Count)
 	triangles := make([]*Triangle, count)
 	for i := 0; i < count; i++ {
 		d := STLTriangle{}
 		if err := binary.Read(file, binary.LittleEndian, &d); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("Got binary read error in loop: %v", err)
 		}
 		v1 := Vector{float64(d.V1[0]), float64(d.V1[1]), float64(d.V1[2])}
 		v2 := Vector{float64(d.V2[0]), float64(d.V2[1]), float64(d.V2[2])}
